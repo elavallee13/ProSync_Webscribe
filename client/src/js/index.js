@@ -1,6 +1,6 @@
 import { Workbox } from 'workbox-window';
-import Editor from './editor';
-import './database';
+import MyTextEditor from './editor';
+import { initializeDatabase } from './database';
 import '../css/style.css';
 
 const main = document.querySelector('#main');
@@ -11,21 +11,27 @@ const loadSpinner = () => {
   spinner.classList.add('spinner');
   spinner.innerHTML = `
   <div class="loading-container">
-  <div class="loading-spinner" />
+    <div class="loading-spinner"></div>
   </div>
   `;
   main.appendChild(spinner);
 };
 
-const editor = new Editor();
+const textEditor = new MyTextEditor();
 
-if (typeof editor === 'undefined') {
+if (typeof textEditor === 'undefined') {
   loadSpinner();
 }
 
 // Check if service workers are supported
-if ('serviceWorker' in navigator) {
-  // register workbox service worker
+
+
+  if ('serviceWorker' in navigator) {
+  
+  
+  // Register workbox service worker
+  
+  
   const workboxSW = new Workbox('/src-sw.js');
   workboxSW.register();
 } else {
