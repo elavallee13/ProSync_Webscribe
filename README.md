@@ -1,4 +1,4 @@
-# ProSync Webscribe (formerly J.A.T.E)
+# ProSync Webscribe (J.A.T.E)
 
 ![ProSync Webscribe Logo](./client/src/images/logo.png)
 
@@ -67,4 +67,3 @@ This project is licensed under the ISC License.
 
 Developed by Eric Lavallee as part of a full-stack development journey.
 
-Feel free to further personalize the README.md to include any additional details you'd like to share about your project.
