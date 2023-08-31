@@ -5,7 +5,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 
 module.exports = () => {
   return {
-    mode: 'development',
+    mode: 'production',
     entry: {
       main: './src/js/index.js',
       install: './src/js/install.js',
@@ -14,25 +14,28 @@ module.exports = () => {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
+    // Add and configure workbox plugins for a service worker and manifest file.
     plugins: [
+      // webpack plugin to generate HTML
       new HtmlWebpackPlugin({
         template: './index.html',
-        title: 'My App',
+        title: 'Just Another Text Editor',
       }),
-
+      // service worker
       new InjectManifest({
         swSrc: './src-sw.js',
         swDest: 'src-sw.js',
       }),
-
+      // manifest.json
       new WebpackPwaManifest({
         fingerprints: false,
         inject: true,
-        name: 'My App',
-        short_name: 'App',
-        description: 'A Simple Application',
-        background_color: '#ffffff',
-        theme_color: '#2196f3',
+        name: 'Just Another Text Editor',
+        short_name: 'JATE',
+        description:
+          'text editor that runs in the browser and functions offline',
+        background_color: '#225ca3',
+        theme_color: '#225ca3',
         start_url: '/',
         publicPath: '/',
         icons: [
@@ -44,7 +47,7 @@ module.exports = () => {
         ],
       }),
     ],
-
+    // Add CSS loaders and babel to webpack.
     module: {
       rules: [
         {
@@ -58,10 +61,13 @@ module.exports = () => {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
-              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/plugin-transform-runtime'],
+              plugins: [
+                '@babel/plugin-proposal-object-rest-spread',
+                '@babel/transform-runtime',
+              ],
             },
           },
-        }
+        },
       ],
     },
   };

@@ -1,11 +1,12 @@
-import { fetchContentFromDatabase, saveContentToDatabase } from './database'; // Import methods to manage data in the database
-import { headerContent } from './header'; // Import header content
+// Import methods to save and get data from the indexedDB database in './database.js'
+import { getDb, putDb } from './database';
+import { header } from './header';
 
-export default class EditorManager {
+export default class {
   constructor() {
-    const localStoredContent = localStorage.getItem('content');
+    const localData = localStorage.getItem('content');
 
-    // Check if the CodeMirror library is loaded
+    // check if CodeMirror is loaded
     if (typeof CodeMirror === 'undefined') {
       throw new Error('CodeMirror is not loaded');
     }
@@ -21,21 +22,21 @@ export default class EditorManager {
       tabSize: 2,
     });
 
-    // Load data from the database when the editor is ready
-    fetchContentFromDatabase().then((data) => {
-      console.info('Loaded data from the database, injecting into editor');
-      this.editor.setValue(data || localStoredContent || headerContent);
+    // When the editor is ready, set the value to whatever is stored in indexeddb.
+    // Fall back to localStorage if nothing is stored in indexeddb, and if neither is available, set the value to header.
+    getDb().then((data) => {
+      console.info('Loaded data from IndexedDB, injecting into editor');
+      this.editor.setValue(data || localData || header);
     });
 
-    // Save content to local storage when the editor's content changes
     this.editor.on('change', () => {
       localStorage.setItem('content', this.editor.getValue());
     });
 
-    // Save the content of the editor to the database when it loses focus
+    // Save the content of the editor when the editor itself is loses focus
     this.editor.on('blur', () => {
       console.log('The editor has lost focus');
-      saveContentToDatabase(localStorage.getItem('content'));
+      putDb(localStorage.getItem('content'));
     });
   }
 }
