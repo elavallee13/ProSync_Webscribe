@@ -1,12 +1,12 @@
-const headerContent = `
+const header = `
 /*
        _____  ____________
       / /   |/_  __/ ____/
  __  / / /| | / / / __/   
 / /_/ / ___ |/ / / /___   
  ____/_/  |_/_/ /_____/   
-my unique text editor
+just another text editor
 */                          
 `;
 
-export { headerContent };
+export { header };

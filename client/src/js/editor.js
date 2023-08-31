@@ -1,16 +1,17 @@
-import { fetchContentFromDatabase, saveContentToDatabase } from './database';
-import { headerContent } from './header';
 
-export default class TextEditor {
+import { getDb, putDb } from './database';
+import { header } from './header';
+
+export default class {
   constructor() {
-    const localContent = localStorage.getItem('editorContent');
+    const localData = localStorage.getItem('content');
 
-    // Check if CodeMirror is loaded
+   
     if (typeof CodeMirror === 'undefined') {
       throw new Error('CodeMirror is not loaded');
     }
 
-    this.editor = CodeMirror(document.querySelector('#editorContainer'), {
+    this.editor = CodeMirror(document.querySelector('#main'), {
       value: '',
       mode: 'javascript',
       theme: 'monokai',
@@ -21,21 +22,20 @@ export default class TextEditor {
       tabSize: 2,
     });
 
-    // When the editor is ready, set the value to content from the database.
-    // If not found in the database, use localStorage, and if none found, use the header content.
-    fetchContentFromDatabase().then((data) => {
-      console.info('Loaded content from database, injecting into editor');
-      this.editor.setValue(data || localContent || headerContent);
+    
+    getDb().then((data) => {
+      console.info('Loaded data from IndexedDB, injecting into editor');
+      this.editor.setValue(data || localData || header);
     });
 
     this.editor.on('change', () => {
-      localStorage.setItem('editorContent', this.editor.getValue());
+      localStorage.setItem('content', this.editor.getValue());
     });
 
-    // Save the content of the editor when it loses focus
+    
     this.editor.on('blur', () => {
-      console.log('Editor has lost focus');
-      saveContentToDatabase(localStorage.getItem('editorContent'));
+      console.log('The editor has lost focus');
+      putDb(localStorage.getItem('content'));
     });
   }
 }

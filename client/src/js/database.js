@@ -1,39 +1,52 @@
 import { openDB } from 'idb';
 
-const initializeDatabase = async () => {
-  // Create a new database using version 1
-  openDB('myTextEditorDB', 1, {
+const initdb = async () =>
+  
+
+  openDB('jate', 1, {
+   
+
     upgrade(db) {
-      if (!db.objectStoreNames.contains('editorData')) {
-        // Create a new object store for editor data
-        db.createObjectStore('editorData', { keyPath: 'id', autoIncrement: true });
-        console.log('Database initialized');
+      if (db.objectStoreNames.contains('jate')) {
+        console.log('jate database already exists');
+        return;
       }
+     
+      db.createObjectStore('jate', { keyPath: 'id', autoIncrement: true });
+      console.log('jate database created');
     },
   });
-};
 
-// Method to add content to the database
-export const saveToDatabase = async (content) => {
-  const db = await openDB('myTextEditorDB', 1);
-  const tx = db.transaction('editorData', 'readwrite');
-  const store = tx.objectStore('editorData');
-  const request = store.put({ value: content });
+
+export const putDb = async (content) => {
+  
+  const jateDb = await openDB('jate', 1);
+  
+  const tx = jateDb.transaction('jate', 'readwrite');
+ 
+  const store = tx.objectStore('jate');
+
+  const request = store.put({ id: 1, value: content });
+ 
   const result = await request;
-  console.log('Content saved to the database', result);
+  console.log('Data saved to the database', result);
 };
 
-// Method to retrieve all content from the database
-export const getFromDatabase = async () => {
-  console.log('Retrieving data from the database');
-  const db = await openDB('myTextEditorDB', 1);
-  const tx = db.transaction('editorData', 'readonly');
-  const store = tx.objectStore('editorData');
+
+export const getDb = async () => {
+  console.log('GET from the database');
+ 
+  const jateDB = await openDB('jate', 1);
+
+  const tx = jateDB.transaction('jate', 'readonly');
+
+  const store = tx.objectStore('jate');
+
   const request = store.getAll();
+
   const result = await request;
   console.log(result);
   return result;
 };
 
-// Initialize the database
-initializeDatabase();
+initdb();
